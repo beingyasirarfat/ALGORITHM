@@ -16,7 +16,8 @@ string current_working_directory()
     free(cwd);
     return working_directory;
 }
-int main(int argc, char const *argv[])
+
+int main(int argc, char const **argv)
 {
     string file = current_working_directory();
     file += "\\";
@@ -68,23 +69,17 @@ int main(int argc, char const *argv[])
     if (fileWoExt.find_last_of("."))
         fileWoExt = fileWoExt.substr(0, fileWoExt.find_last_of("."));
 
-    Command += " -o " + fileWoExt + " " + file + " && echo $?";
-    cout << "#Compiling " << fileWoExt << "....." << endl;
+    Command += " -o \"" + fileWoExt + "\" \"" + file + "\"";
+    printf("#Compiling: %s...\n", fileWoExt.c_str());
     int b = system(Command.data());
     if (!b)
     {
-        cout << "Compilation successful" << endl
-             << "Running " << fileWoExt << ".exe..." << endl;
-        system("clear");
+        printf("Compilation successful.\n#Running: %s.exe...\n##############################\n", fileWoExt.c_str());
+        fileWoExt = "\"" + fileWoExt + "\"";
         system(fileWoExt.data());
     }
     else
-    {
-        cout << endl
-             << endl
-             << "#Failed." << endl
-             << "Fix the errors above and compile again." << endl;
-    }
+        printf("\n\n#Failed.\nFix the errors above and compile again.\n");
 
     return 0;
 }
